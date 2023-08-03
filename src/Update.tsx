@@ -1,6 +1,17 @@
+import { useState } from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { RootState, User } from "./redux/reducers/Data";
 
 export const Update = () => {
+  const { id } = useParams();
+  const users = useSelector((state: RootState) => state.users);
+  const existingUser = users.find((user: User) => user.id === id);
+  const name = existingUser?.name ?? "";
+  const email = existingUser?.email ?? "";
+  const [userName, setUserName] = useState<string>(name);
+  const [userEmail, setUserEmail] = useState<string>(email);
   return (
     <Container>
       <Typography
@@ -19,6 +30,7 @@ export const Update = () => {
             label="Name"
             name="name"
             type="text"
+            defaultValue={userName}
             fullWidth
             style={{
               marginBottom: "30px",
@@ -29,6 +41,7 @@ export const Update = () => {
             label="Email"
             type="email"
             name="email"
+            defaultValue={userEmail}
             fullWidth
           />
           <Button

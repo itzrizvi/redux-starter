@@ -13,7 +13,13 @@ export const Create = () => {
 
   const handleOnSubmit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
-    dispatch(addUser({ id: users[users.length - 1].id + 1, name, email }));
+    dispatch(
+      addUser({
+        id: `${parseInt(users[users.length - 1].id) + 1}`,
+        name,
+        email,
+      }),
+    );
     navigate("/");
   };
 
