@@ -1,49 +1,53 @@
 import { Container, Typography, Button } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
-const columns: GridColDef[] = [
-  { field: "id", headerName: "ID", width: 170 },
-  { field: "name", headerName: "Name", width: 230 },
-  { field: "email", headerName: "Email", width: 230 },
-  {
-    field: "action",
-    headerName: "Action",
-    width: 230,
-    renderCell: (params) => {
-      const handleEdit = () => {
-        // Implement your edit logic here
-        console.log("Edit button clicked for row:", params.row.id);
-      };
-
-      const handleDelete = () => {
-        // Implement your delete logic here
-        console.log("Delete button clicked for row:", params.row.id);
-      };
-      return (
-        <div>
-          <Link to={`/edit/${params.row.id}`}>
-            <Button
-              onClick={handleEdit}
-              variant="outlined"
-              color="primary"
-              style={{ marginRight: "10px" }}
-            >
-              Edit
-            </Button>
-          </Link>
-          <Button onClick={handleDelete} variant="outlined" color="error">
-            Delete
-          </Button>
-        </div>
-      );
-    },
-  },
-];
+import { deleteUser } from "./redux/reducers/userReducer";
 
 export const Home = () => {
   const users = useSelector((state: any) => state.users);
+  const dispatch = useDispatch();
+
+  const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", width: 170 },
+    { field: "name", headerName: "Name", width: 230 },
+    { field: "email", headerName: "Email", width: 230 },
+    {
+      field: "action",
+      headerName: "Action",
+      width: 230,
+      renderCell: (params) => {
+        const handleDelete = (id: string) => {
+          dispatch(
+            deleteUser({
+              id,
+            }),
+          );
+        };
+        return (
+          <div>
+            <Link to={`/edit/${params.row.id}`}>
+              <Button
+                variant="outlined"
+                color="primary"
+                style={{ marginRight: "10px" }}
+              >
+                Edit
+              </Button>
+            </Link>
+            <Button
+              onClick={() => handleDelete(params.row.id)}
+              variant="outlined"
+              color="error"
+            >
+              Delete
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
     <div>
       <Container>

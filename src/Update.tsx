@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { RootState, User } from "./redux/reducers/Data";
+import { updateUser } from "./redux/reducers/userReducer";
 
 export const Update = () => {
   const { id } = useParams();
@@ -12,6 +13,20 @@ export const Update = () => {
   const email = existingUser?.email ?? "";
   const [userName, setUserName] = useState<string>(name);
   const [userEmail, setUserEmail] = useState<string>(email);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleOnSubmit = (e: React.BaseSyntheticEvent) => {
+    e.preventDefault();
+    dispatch(
+      updateUser({
+        id,
+        name: userName,
+        email: userEmail,
+      }),
+    );
+    navigate("/");
+  };
   return (
     <Container>
       <Typography
@@ -23,7 +38,13 @@ export const Update = () => {
       >
         Update Entry
       </Typography>
-      <Box component="form" noValidate autoComplete="off" p={10}>
+      <Box
+        component="form"
+        noValidate
+        autoComplete="off"
+        p={10}
+        onSubmit={(e) => handleOnSubmit(e)}
+      >
         <div>
           <TextField
             id="outlined-required"
@@ -32,6 +53,7 @@ export const Update = () => {
             type="text"
             defaultValue={userName}
             fullWidth
+            onChange={(e) => setUserName(e.target.value)}
             style={{
               marginBottom: "30px",
             }}
@@ -42,6 +64,7 @@ export const Update = () => {
             type="email"
             name="email"
             defaultValue={userEmail}
+            onChange={(e) => setUserEmail(e.target.value)}
             fullWidth
           />
           <Button

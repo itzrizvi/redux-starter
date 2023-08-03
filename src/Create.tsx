@@ -15,7 +15,7 @@ export const Create = () => {
     e.preventDefault();
     dispatch(
       addUser({
-        id: `${parseInt(users[users.length - 1].id) + 1}`,
+        id: `${parseInt(users.length ? users[users.length - 1].id : 0) + 1}`,
         name,
         email,
       }),
